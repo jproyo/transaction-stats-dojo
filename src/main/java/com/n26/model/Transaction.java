@@ -35,8 +35,16 @@ public class Transaction {
         return getTimestamp() > now;
     }
 
+    public boolean noContent() {
+        return getAmount() == null || getTimestamp() == null;
+    }
+
+    private boolean validTime() {
+       return !isOld() && !isFuture();
+    }
+
     public boolean valid() {
-        return !isOld() && !isFuture();
+        return !noContent() && validTime();
     }
 
     public static TransactionBuilder create(){

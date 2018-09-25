@@ -62,4 +62,11 @@ public class TransactionServiceTest {
         assertEquals(StoreResult.NO_CONTENT, result);
     }
 
+    @Test
+    public void testStoreTransactionTransactionWrongAmount(){
+        StoreResult result = target.store(Transaction.create().build());
+        assertNotNull(result);
+        assertEquals(StoreResult.NO_CONTENT, result);
+    }
+
 }
