@@ -54,8 +54,8 @@ public class StatisticsServiceTest {
 
     @Test
     public void testGetStatisticsEmpty(){
-        LoadDataUtils.loadTransactions(transactionService);
         Statistics statistics = target.get();
         assertNotNull(statistics);
+        assertEquals(Statistics.empty(), statistics);
     }
 }

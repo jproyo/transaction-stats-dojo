@@ -1,31 +1,29 @@
 package com.n26.core.util;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 
 public class StatisticsCollector implements Consumer<BigDecimal> {
 
-    private BigDecimal sum = BigDecimal.ZERO, min, max;
-    private long count;
+    private BigDecimal sum = BigDecimal.ZERO;
+    private BigDecimal min = BigDecimal.ZERO;
+    private BigDecimal max = BigDecimal.ZERO;
+    private long count = 0;
 
     public void accept(BigDecimal t) {
         if(count == 0) {
-            Objects.requireNonNull(t);
-            count = 1;
             sum = t;
             min = t;
             max = t;
-        }
-        else {
+        } else {
             sum = sum.add(t);
             if(min.compareTo(t) > 0) min = t;
             if(max.compareTo(t) < 0) max = t;
-            count++;
         }
+        count++;
     }
+
     public StatisticsCollector merge(StatisticsCollector s) {
         if(s.count > 0) {
             if(count == 0) {
