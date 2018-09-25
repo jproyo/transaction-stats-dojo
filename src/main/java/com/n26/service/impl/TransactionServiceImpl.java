@@ -33,9 +33,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public StoreResult resultFromTransaction(Transaction transaction){
-        if(validator.noContent(transaction)) return StoreResult.NO_CONTENT;
-        else if(!validator.validTime(transaction)) return StoreResult.INVALID_TRANSACTION;
-        return StoreResult.OK;
+        if(validator.noContent(transaction)) {
+            return StoreResult.NO_CONTENT;
+        } else {
+            return StoreResult.INVALID_TRANSACTION;
+        }
     }
 
     public void setStorage(Storage storage) {
