@@ -17,11 +17,19 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void testStoreTransactionSuccessful(){
+    public void testStoreTransactionOK(){
         Transaction transaction = new Transaction();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
         assertEquals(StoreResult.OK, result);
+    }
+
+    @Test
+    public void testStoreTransactionOldTransaction(){
+        Transaction transaction = new Transaction();
+        StoreResult result = target.store(transaction);
+        assertNotNull(result);
+        assertEquals(StoreResult.OLD_TRANSACTION_NOT_ALLOWED, result);
     }
 
 }
