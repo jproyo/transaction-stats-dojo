@@ -42,4 +42,24 @@ public class TransactionServiceTest {
         assertEquals(StoreResult.OLD_TRANSACTION_NOT_ALLOWED, result);
     }
 
+
+    @Test
+    public void testStoreTransactionFutureTransaction(){
+        long timestamp = System.currentTimeMillis() + 1000;
+        Transaction transaction = Transaction.create()
+                .amount(new BigDecimal(100.98))
+                .timestamp(timestamp)
+                .build();
+        StoreResult result = target.store(transaction);
+        assertNotNull(result);
+        assertEquals(StoreResult.FUTURE_TRANSACTION_NOT_ALLOWED, result);
+    }
+
+    @Test
+    public void testStoreTransactionNullTransaction(){
+        StoreResult result = target.store(null);
+        assertNotNull(result);
+        assertEquals(StoreResult.NO_CONTENT, result);
+    }
+
 }

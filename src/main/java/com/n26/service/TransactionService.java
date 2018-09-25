@@ -19,6 +19,7 @@ public class TransactionService {
     }
 
     public StoreResult resultFromTransaction(Transaction transaction){
+        if(transaction == null) return StoreResult.NO_CONTENT;
         if(transaction.isOld()) return StoreResult.OLD_TRANSACTION_NOT_ALLOWED;
         else if(transaction.isFuture()) return StoreResult.FUTURE_TRANSACTION_NOT_ALLOWED;
         return StoreResult.OK;
