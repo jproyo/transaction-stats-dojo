@@ -6,7 +6,7 @@ public class Statistics {
     private String avg;
     private String max;
     private String min;
-    private Integer count;
+    private Long count;
 
     public String getSum() {
         return sum;
@@ -40,11 +40,11 @@ public class Statistics {
         this.min = min;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
@@ -58,7 +58,7 @@ public class Statistics {
                 .max("0.00")
                 .min("0.00")
                 .sum("0.00")
-                .count(0)
+                .count(0l)
                 .build();
     }
 
@@ -94,7 +94,7 @@ public class Statistics {
             return this;
         }
 
-        public StatisticsBuilder count(Integer count) {
+        public StatisticsBuilder count(Long count) {
             statistics.setCount(count);
             return this;
         }

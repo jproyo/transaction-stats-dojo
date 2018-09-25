@@ -1,8 +1,12 @@
 package com.n26.service.impl;
 
 import com.n26.model.Statistics;
+import com.n26.model.Transaction;
 import com.n26.persistence.Storage;
 import com.n26.service.StatisticsService;
+
+import java.util.DoubleSummaryStatistics;
+import java.util.List;
 
 public class StatisticsServiceImpl implements StatisticsService {
 
@@ -10,7 +14,23 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Statistics get() {
-        return null;
+        DoubleSummaryStatistics collect = storage.getAll()
+                .values()
+                .stream()
+                .flatMap(List::stream)
+                .map(Transaction::getAmount)
+                .mapToDouble(t -> new Double(t.doubleValue()))
+                .collect(
+                        DoubleSummaryStatistics::new,
+                        DoubleSummaryStatistics::accept,
+                        DoubleSummaryStatistics::combine);
+        return Statistics.create()
+                .avg(Double.toString(collect.getAverage()))
+                .max(Double.toString(collect.getMax()))
+                .min(Double.toString(collect.getMin()))
+                .sum(Double.toString(collect.getSum()))
+                .count(collect.getCount())
+                .build();
     }
 
     public void setStorage(Storage storage) {

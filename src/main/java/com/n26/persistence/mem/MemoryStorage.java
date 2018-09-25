@@ -5,6 +5,7 @@ import com.n26.persistence.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryStorage implements Storage {
@@ -18,5 +19,10 @@ public class MemoryStorage implements Storage {
         storage.putIfAbsent(transaction.getTimestamp(), transactions);
         storage.replace(transaction.getTimestamp(), transactions);
         return transaction;
+    }
+
+    @Override
+    public Map<Long, List<Transaction>> getAll() {
+        return storage;
     }
 }
