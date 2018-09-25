@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneOffset;
+
 @RestController
 public class TransactionEndpoint {
 
@@ -24,7 +26,7 @@ public class TransactionEndpoint {
     public ResponseEntity save(@RequestBody TransactionRequest transactionRaw){
         Transaction toStore = Transaction.create()
                 .amount(transactionRaw.getAmount())
-                .timestamp(transactionRaw.getTimestamp().getTime()).build();
+                .timestamp(transactionRaw.getTimestamp().toInstant(ZoneOffset.UTC).toEpochMilli()).build();
         StoreResult store = transactionService.store(toStore);
         switch (store){
             case NO_CONTENT:

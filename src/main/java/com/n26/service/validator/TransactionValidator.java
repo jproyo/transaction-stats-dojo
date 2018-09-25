@@ -26,6 +26,7 @@ public class TransactionValidator implements Validator{
     public boolean validTime(Transaction transaction) {
         Instant now = Instant.now(Clock.systemUTC());
         Instant past = now.minus(config.getAmount(), config.unit());
+        System.out.println("Now: "+now.toEpochMilli()+" - Past: "+past.toEpochMilli()+" - Transaction: "+transaction.getTimestamp());
         return Optional.ofNullable(transaction)
                 .map(t -> t.getTimestamp() >= past.toEpochMilli()
                             && t.getTimestamp() <= now.toEpochMilli()
