@@ -1,6 +1,7 @@
 package com.n26.endpoint;
 
 import com.n26.model.Statistics;
+import com.n26.model.Transaction;
 import com.n26.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,8 @@ public class TransactionEndpoint {
     @RequestMapping(value = "/transactions", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void save(@RequestBody TransactionRequest transactionRaw){
-
+        Transaction.create().amount(transactionRaw)
+        service.store()
     }
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET)
