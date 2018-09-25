@@ -2,6 +2,7 @@ package com.n26.service;
 
 import com.n26.model.StoreResult;
 import com.n26.model.Transaction;
+import com.n26.persistence.mem.MemoryStorage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,12 +16,15 @@ public class TransactionServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        target = new TransactionService();
+        target = TransactionService.create().storage(new MemoryStorage()).build();
     }
 
     @Test
     public void testStoreTransactionOK(){
-        Transaction transaction = Transaction.create().build();
+        Transaction transaction = Transaction.create()
+                .amount(new BigDecimal(100.98))
+                .timestamp(System.currentTimeMillis()-1000)
+                .build();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
         assertEquals(StoreResult.OK, result);
@@ -28,9 +32,10 @@ public class TransactionServiceTest {
 
     @Test
     public void testStoreTransactionOldTransaction(){
+        long timestamp = System.currentTimeMillis() - 61000;
         Transaction transaction = Transaction.create()
                 .amount(new BigDecimal(100.98))
-                .timestamp(System.currentTimeMillis())
+                .timestamp(timestamp)
                 .build();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
