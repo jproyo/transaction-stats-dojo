@@ -14,6 +14,7 @@ public class TransactionServiceTest {
     }
 
     public void testStoreTransactionSuccessful(){
+        Transaction transaction = new Transaction();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
         assertEquals(StoreResult.OK, result);
