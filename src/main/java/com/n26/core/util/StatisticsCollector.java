@@ -1,6 +1,7 @@
 package com.n26.core.util;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
@@ -52,7 +53,7 @@ public class StatisticsCollector implements Consumer<BigDecimal> {
     }
 
     public BigDecimal getAvg() {
-      return count < 2 ? sum : sum.divide(BigDecimal.valueOf(count));
+      return count < 2 ? sum : sum.divide(BigDecimal.valueOf(count), BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal getMin() {

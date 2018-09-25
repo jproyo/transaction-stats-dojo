@@ -1,5 +1,7 @@
 package com.n26.model;
 
+import java.util.Objects;
+
 public class Statistics {
 
     private String sum;
@@ -46,6 +48,18 @@ public class Statistics {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Statistics that = (Statistics) o;
+        return Objects.equals(sum, that.sum) &&
+                Objects.equals(avg, that.avg) &&
+                Objects.equals(max, that.max) &&
+                Objects.equals(min, that.min) &&
+                Objects.equals(count, that.count);
     }
 
     public static StatisticsBuilder create(){
