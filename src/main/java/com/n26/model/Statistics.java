@@ -48,6 +48,10 @@ public class Statistics {
         this.count = count;
     }
 
+    public static StatisticsBuilder create(){
+        return new StatisticsBuilder();
+    }
+
     public static Statistics empty() {
         return create()
                 .avg("0.00")
@@ -58,41 +62,45 @@ public class Statistics {
                 .build();
     }
 
-    public static Builder create() {
-        return new Builder();
-    }
 
-    public static final class Builder {
-        private Statistics target = new Statistics();
+    public static final class StatisticsBuilder {
+        private Statistics statistics;
 
+        private StatisticsBuilder() {
+            statistics = new Statistics();
+        }
 
-        public Builder sum(String sum) {
-            this.target.sum = sum;
+        public static StatisticsBuilder aStatistics() {
+            return new StatisticsBuilder();
+        }
+
+        public StatisticsBuilder sum(String sum) {
+            statistics.setSum(sum);
             return this;
         }
 
-        public Builder avg(String avg) {
-            this.target.avg = avg;
+        public StatisticsBuilder avg(String avg) {
+            statistics.setAvg(avg);
             return this;
         }
 
-        public Builder max(String max) {
-            this.target.max = max;
+        public StatisticsBuilder max(String max) {
+            statistics.setMax(max);
             return this;
         }
 
-        public Builder min(String min) {
-            this.target.min = min;
+        public StatisticsBuilder min(String min) {
+            statistics.setMin(min);
             return this;
         }
 
-        public Builder count(Integer count) {
-            this.target.count = count;
+        public StatisticsBuilder count(Integer count) {
+            statistics.setCount(count);
             return this;
         }
 
         public Statistics build() {
-            return target;
+            return statistics;
         }
     }
 }
