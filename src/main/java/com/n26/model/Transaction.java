@@ -8,6 +8,7 @@ public class Transaction {
 
     private Long timestamp;
 
+    private Long now = System.currentTimeMillis();
 
     public BigDecimal getAmount() {
         return amount;
@@ -23,6 +24,19 @@ public class Transaction {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isOld(){
+        long sixtySecsBefore = now - 60000;
+        return getTimestamp() < sixtySecsBefore;
+    }
+
+    public boolean isFuture(){
+        return getTimestamp() > now;
+    }
+
+    public boolean valid() {
+        return !isOld() && !isFuture();
     }
 
     public static TransactionBuilder create(){
