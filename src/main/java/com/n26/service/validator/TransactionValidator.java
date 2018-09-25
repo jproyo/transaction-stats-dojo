@@ -26,11 +26,10 @@ public class TransactionValidator implements Validator{
     public boolean validTime(Transaction transaction) {
         Instant now = Instant.now(Clock.systemUTC());
         Instant past = now.minus(config.getAmount(), config.unit());
-        Optional.ofNullable(transaction)
-                .map(t -> {
-                    return t.getTimestamp() >= past.toEpochMilli()
+        return Optional.ofNullable(transaction)
+                .map(t -> t.getTimestamp() >= past.toEpochMilli()
                             && t.getTimestamp() <= now.toEpochMilli()
-                })
+                )
                 .orElse(true);
     }
 
