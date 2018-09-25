@@ -8,8 +8,6 @@ public class Transaction {
 
     private Long timestamp;
 
-    private Long now = System.currentTimeMillis();
-
     public BigDecimal getAmount() {
         return amount;
     }

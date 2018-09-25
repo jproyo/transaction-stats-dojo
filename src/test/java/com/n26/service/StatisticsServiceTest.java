@@ -1,11 +1,13 @@
 package com.n26.service;
 
+import com.n26.config.Config;
 import com.n26.model.Statistics;
 import com.n26.model.StoreResult;
 import com.n26.model.Transaction;
 import com.n26.persistence.mem.MemoryStorage;
 import com.n26.service.impl.StatisticsServiceImpl;
 import com.n26.service.impl.TransactionServiceImpl;
+import com.n26.service.validator.TransactionValidator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,8 +27,16 @@ public class StatisticsServiceTest {
     @Before
     public void setUp() throws Exception {
         MemoryStorage storage = new MemoryStorage();
-        target = StatisticsServiceImpl.create().storage(storage).build();
-        transactionService = TransactionServiceImpl.create().storage(storage).build();
+        Config config = new Config();
+        TransactionValidator validator = TransactionValidator.create().config(config).build();
+        target = StatisticsServiceImpl.create()
+                .storage(storage)
+                .config(config)
+                .build();
+        transactionService = TransactionServiceImpl.create()
+                .storage(storage)
+                .validator(validator)
+                .build();
     }
 
     @Test

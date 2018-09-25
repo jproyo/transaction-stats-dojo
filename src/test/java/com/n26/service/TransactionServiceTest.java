@@ -1,9 +1,11 @@
 package com.n26.service;
 
+import com.n26.config.Config;
 import com.n26.model.StoreResult;
 import com.n26.model.Transaction;
 import com.n26.persistence.mem.MemoryStorage;
 import com.n26.service.impl.TransactionServiceImpl;
+import com.n26.service.validator.TransactionValidator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +22,10 @@ public class TransactionServiceTest {
     @Before
     public void setUp() throws Exception {
         storage = new MemoryStorage();
-        target = TransactionServiceImpl.create().storage(storage).build();
+        target = TransactionServiceImpl.create()
+                .storage(storage)
+                .validator(TransactionValidator.create().config(new Config()).build())
+                .build();
     }
 
     @Test
@@ -43,7 +48,7 @@ public class TransactionServiceTest {
                 .build();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
-        assertEquals(StoreResult.OLD_TRANSACTION_NOT_ALLOWED, result);
+        assertEquals(StoreResult.INVALID_TRANSACTION, result);
     }
 
 
@@ -56,7 +61,7 @@ public class TransactionServiceTest {
                 .build();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
-        assertEquals(StoreResult.FUTURE_TRANSACTION_NOT_ALLOWED, result);
+        assertEquals(StoreResult.INVALID_TRANSACTION, result);
     }
 
     @Test
