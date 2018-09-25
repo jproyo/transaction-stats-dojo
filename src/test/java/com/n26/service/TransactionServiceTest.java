@@ -64,7 +64,14 @@ public class TransactionServiceTest {
 
     @Test
     public void testStoreTransactionTransactionWrongAmount(){
-        StoreResult result = target.store(Transaction.create().build());
+        StoreResult result = target.store(Transaction.create().timestamp(System.currentTimeMillis()).build());
+        assertNotNull(result);
+        assertEquals(StoreResult.NO_CONTENT, result);
+    }
+
+    @Test
+    public void testStoreTransactionTransactionWrongTime(){
+        StoreResult result = target.store(Transaction.create().amount(new BigDecimal(0.98)).build());
         assertNotNull(result);
         assertEquals(StoreResult.NO_CONTENT, result);
     }
