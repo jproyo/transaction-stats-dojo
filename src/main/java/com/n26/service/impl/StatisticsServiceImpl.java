@@ -1,12 +1,14 @@
 package com.n26.service.impl;
 
+import com.n26.core.util.FormatterUtil;
+import com.n26.core.util.StatisticsCollector;
 import com.n26.model.Statistics;
 import com.n26.model.Transaction;
 import com.n26.persistence.Storage;
 import com.n26.service.StatisticsService;
 
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class StatisticsServiceImpl implements StatisticsService {
 
@@ -14,21 +16,15 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Statistics get() {
-        DoubleSummaryStatistics collect = storage.getAll()
-                .values()
-                .stream()
-                .flatMap(List::stream)
+        List<Transaction> transactions = storage.getTransactionsLast(60, TimeUnit.SECONDS);
+        StatisticsCollector collect = transactions.stream()
                 .map(Transaction::getAmount)
-                .mapToDouble(t -> new Double(t.doubleValue()))
-                .collect(
-                        DoubleSummaryStatistics::new,
-                        DoubleSummaryStatistics::accept,
-                        DoubleSummaryStatistics::combine);
+                .collect(StatisticsCollector.create());
         return Statistics.create()
-                .avg(Double.toString(collect.getAverage()))
-                .max(Double.toString(collect.getMax()))
-                .min(Double.toString(collect.getMin()))
-                .sum(Double.toString(collect.getSum()))
+                .avg(FormatterUtil.format(collect.getAvg()))
+                .max(FormatterUtil.format(collect.getMax()))
+                .min(FormatterUtil.format(collect.getMin()))
+                .sum(FormatterUtil.format(collect.getSum()))
                 .count(collect.getCount())
                 .build();
     }
