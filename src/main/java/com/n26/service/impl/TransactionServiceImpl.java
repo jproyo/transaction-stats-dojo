@@ -20,6 +20,11 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElse(resultFromTransaction(transaction));
     }
 
+    @Override
+    public void deleteAll() {
+        storage.deleteAll();
+    }
+
     public StoreResult resultFromTransaction(Transaction transaction){
         if(transaction == null || transaction.noContent()) return StoreResult.NO_CONTENT;
         if(transaction.isOld()) return StoreResult.OLD_TRANSACTION_NOT_ALLOWED;

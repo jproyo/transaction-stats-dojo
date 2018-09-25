@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
 public class StatisticsServiceTest {
 
     private StatisticsServiceImpl target;
+
     private TransactionServiceImpl transactionService;
 
     @Before
@@ -30,14 +31,14 @@ public class StatisticsServiceTest {
 
     @Test
     public void testGetStatisticsWithResults(){
-        loadTransactions();
+        LoadDataUtils.loadTransactions(transactionService);
         Statistics statistics = target.get();
         assertNotNull(statistics);
     }
 
     @Test
     public void testGetStatisticsWithoutOldResults(){
-        loadTransactionsWithoutOldResults();
+        LoadDataUtils.loadTransactionsWithoutOldResults(transactionService);
         Statistics statistics = target.get();
         assertNotNull(statistics);
         Statistics statsExpected = Statistics.create()
@@ -50,53 +51,11 @@ public class StatisticsServiceTest {
         assertEquals(statsExpected, statistics);
     }
 
-    private void loadTransactionsWithoutOldResults() {
-        IntStream.range(1, 11).forEach(i ->{
-            transactionService.store(Transaction.create()
-                    .timestamp(System.currentTimeMillis()-61000)
-                    .amount(new BigDecimal(21.32*i))
-                    .build());
-        });
 
-        Arrays.asList(
-                 Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(21.38))
-                        .build()
-                , Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(14.6546456))
-                        .build()
-                , Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(31.578))
-                        .build()
-                , Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(1223221.35558))
-                        .build()
-                , Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(757547.354358))
-                        .build()
-                , Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(266661.378888))
-                        .build()
-                , Transaction.create()
-                        .timestamp(System.currentTimeMillis()-1000)
-                        .amount(new BigDecimal(2232421.12231238))
-                        .build()
-        ).stream().forEach(transactionService::store);
+    @Test
+    public void testGetStatisticsEmpty(){
+        LoadDataUtils.loadTransactions(transactionService);
+        Statistics statistics = target.get();
+        assertNotNull(statistics);
     }
-
-    private void loadTransactions() {
-        IntStream.range(1, 201).forEach(i ->{
-            transactionService.store(Transaction.create()
-                    .timestamp(System.currentTimeMillis()-1000)
-                    .amount(new BigDecimal(23.98*i))
-                    .build());
-        });
-    }
-
 }

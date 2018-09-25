@@ -15,9 +15,12 @@ public class TransactionServiceTest {
 
     private TransactionServiceImpl target;
 
+    private MemoryStorage storage;
+
     @Before
     public void setUp() throws Exception {
-        target = TransactionServiceImpl.create().storage(new MemoryStorage()).build();
+        storage = new MemoryStorage();
+        target = TransactionServiceImpl.create().storage(storage).build();
     }
 
     @Test
@@ -75,6 +78,14 @@ public class TransactionServiceTest {
         StoreResult result = target.store(Transaction.create().amount(new BigDecimal(0.98)).build());
         assertNotNull(result);
         assertEquals(StoreResult.NO_CONTENT, result);
+    }
+
+
+    @Test
+    public void testDeleteAll(){
+        LoadDataUtils.loadTransactions(target);
+        target.deleteAll();
+        assertTrue(storage.getAll().isEmpty());
     }
 
 
