@@ -5,16 +5,21 @@ import com.n26.model.Transaction;
 import com.n26.persistence.Storage;
 import com.n26.service.TransactionService;
 
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
 public class TransactionServiceImpl implements TransactionService {
 
     private Storage storage;
 
+    private Long amount = 60l;
+    private TemporalUnit unit = ChronoUnit.valueOf("seconds".toUpperCase());
+
     @Override
     public StoreResult store(Transaction transaction) {
         return Optional.ofNullable(transaction)
-                .filter(t -> t.valid())
+                .filter(Transaction::valid)
                 .map(storage::put)
                 .map(t -> StoreResult.OK)
                 .orElse(resultFromTransaction(transaction));
@@ -27,7 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public StoreResult resultFromTransaction(Transaction transaction){
         if(transaction == null || transaction.noContent()) return StoreResult.NO_CONTENT;
-        if(transaction.isOld()) return StoreResult.OLD_TRANSACTION_NOT_ALLOWED;
+        if(transaction.isOld(amount, unit)) return StoreResult.OLD_TRANSACTION_NOT_ALLOWED;
         else if(transaction.isFuture()) return StoreResult.FUTURE_TRANSACTION_NOT_ALLOWED;
         return StoreResult.OK;
     }

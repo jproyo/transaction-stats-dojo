@@ -62,6 +62,18 @@ public class Statistics {
                 Objects.equals(count, that.count);
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Statistics{");
+        sb.append("sum='").append(sum).append('\'');
+        sb.append(", avg='").append(avg).append('\'');
+        sb.append(", max='").append(max).append('\'');
+        sb.append(", min='").append(min).append('\'');
+        sb.append(", count=").append(count);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static StatisticsBuilder create(){
         return new StatisticsBuilder();
     }

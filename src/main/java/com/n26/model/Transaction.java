@@ -26,27 +26,6 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public boolean isOld(){
-        long sixtySecsBefore = now - 60000;
-        return getTimestamp() < sixtySecsBefore;
-    }
-
-    public boolean isFuture(){
-        return getTimestamp() > now;
-    }
-
-    public boolean noContent() {
-        return getAmount() == null || getTimestamp() == null;
-    }
-
-    private boolean validTime() {
-       return !isOld() && !isFuture();
-    }
-
-    public boolean valid() {
-        return !noContent() && validTime();
-    }
-
     public static TransactionBuilder create(){
         return new TransactionBuilder();
     }

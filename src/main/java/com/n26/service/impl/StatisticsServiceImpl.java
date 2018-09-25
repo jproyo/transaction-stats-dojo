@@ -7,8 +7,8 @@ import com.n26.model.Transaction;
 import com.n26.persistence.Storage;
 import com.n26.service.StatisticsService;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class StatisticsServiceImpl implements StatisticsService {
 
@@ -16,7 +16,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Statistics get() {
-        List<Transaction> transactions = storage.getTransactionsLast(60, TimeUnit.SECONDS);
+        List<Transaction> transactions = storage.getTransactionsLast(60l, ChronoUnit.SECONDS);
         StatisticsCollector collect = transactions.stream()
                 .map(Transaction::getAmount)
                 .collect(StatisticsCollector.create());

@@ -7,15 +7,16 @@ import java.util.stream.Collector;
 public class StatisticsCollector implements Consumer<BigDecimal> {
 
     private BigDecimal sum = BigDecimal.ZERO;
+
     private BigDecimal min = BigDecimal.ZERO;
+
     private BigDecimal max = BigDecimal.ZERO;
+
     private long count = 0;
 
     public void accept(BigDecimal t) {
         if(count == 0) {
-            sum = t;
-            min = t;
-            max = t;
+            sum = min = max = t;
         } else {
             sum = sum.add(t);
             if(min.compareTo(t) > 0) min = t;
@@ -28,9 +29,7 @@ public class StatisticsCollector implements Consumer<BigDecimal> {
         if(s.count > 0) {
             if(count == 0) {
                 count = s.count;
-                sum = s.sum;
-                min = s.min;
-                max = s.max;
+                sum = max = min = s.sum;
             }
             else {
                 sum = sum.add(s.sum);
