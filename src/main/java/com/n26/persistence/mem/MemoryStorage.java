@@ -13,6 +13,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+/**
+ * Memory Collection Representation of the Storage
+ * Basically Transactions are being stored in a Map in the following way:
+ * - Key: Long timestamp
+ * - Value: List of Transactions in that timestamp
+ *
+ * In this implementation we can have constant-time for add, remove and get operations
+ * fulfilling requirements.
+ *
+ */
 public class MemoryStorage implements Storage {
 
     private ConcurrentHashMap<Long, List<Transaction>> storage = new ConcurrentHashMap<>();

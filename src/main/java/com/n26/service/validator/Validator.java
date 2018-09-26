@@ -1,9 +1,16 @@
 package com.n26.service.validator;
 
-import com.n26.model.Transaction;
+/**
+ * The interface Validator.
+ */
+public interface Validator<T> {
 
-public interface Validator {
-
-    ValidatorResult validate(Transaction transaction);
+    /**
+     * Validate validator result.
+     *
+     * @param  validatable object
+     * @return the validator result
+     */
+    ValidatorResult validate(T validatable);
 
 }

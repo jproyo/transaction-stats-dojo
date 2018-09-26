@@ -5,6 +5,9 @@ import java.math.RoundingMode;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 
+/**
+ * Statistics collector based on BigDecimal amounts
+ */
 public class StatisticsCollector implements Consumer<BigDecimal> {
 
     private BigDecimal sum = BigDecimal.ZERO;
@@ -26,6 +29,12 @@ public class StatisticsCollector implements Consumer<BigDecimal> {
         count++;
     }
 
+    /**
+     * Merge statistics collector.
+     *
+     * @param s the s
+     * @return the statistics collector
+     */
     public StatisticsCollector merge(StatisticsCollector s) {
         if(s.count > 0) {
             if(count == 0) {
@@ -42,26 +51,56 @@ public class StatisticsCollector implements Consumer<BigDecimal> {
         return this;
     }
 
+    /**
+     * Gets count.
+     *
+     * @return the count
+     */
     public long getCount() {
         return count;
     }
 
+    /**
+     * Gets sum.
+     *
+     * @return the sum
+     */
     public BigDecimal getSum() {
       return sum;
     }
 
+    /**
+     * Gets avg.
+     *
+     * @return the avg
+     */
     public BigDecimal getAvg() {
       return count < 2 ? sum : sum.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP);
     }
 
+    /**
+     * Gets min.
+     *
+     * @return the min
+     */
     public BigDecimal getMin() {
         return min;
     }
 
+    /**
+     * Gets max.
+     *
+     * @return the max
+     */
     public BigDecimal getMax() {
         return max;
     }
 
+    /**
+     * Create collector.
+     *
+     * @return the collector
+     */
     public static Collector<BigDecimal, ?, StatisticsCollector> create() {
         return Collector.of(StatisticsCollector::new,
                 StatisticsCollector::accept,

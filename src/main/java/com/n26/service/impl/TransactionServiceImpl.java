@@ -11,13 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.function.Function;
 
+/**
+ * Transaction default implementation service
+ */
 public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private Storage storage;
 
     @Autowired
-    private Validator validator;
+    private Validator<Transaction> validator;
 
 
     @Override
@@ -53,18 +56,36 @@ public class TransactionServiceImpl implements TransactionService {
         storage.deleteAll();
     }
 
+    /**
+     * Sets storage.
+     *
+     * @param storage the storage
+     */
     public void setStorage(Storage storage) {
         this.storage = storage;
     }
 
-    public void setValidator(Validator validator) {
+    /**
+     * Sets validator.
+     *
+     * @param validator the validator
+     */
+    public void setValidator(Validator<Transaction> validator) {
         this.validator = validator;
     }
 
+    /**
+     * Create transaction service builder.
+     *
+     * @return the transaction service builder
+     */
     public static TransactionServiceBuilder create(){
         return new TransactionServiceBuilder();
     }
 
+    /**
+     * The type Transaction service builder.
+     */
     public static final class TransactionServiceBuilder {
         private TransactionServiceImpl transactionService;
 
@@ -72,20 +93,42 @@ public class TransactionServiceImpl implements TransactionService {
             transactionService = new TransactionServiceImpl();
         }
 
+        /**
+         * A transaction service transaction service builder.
+         *
+         * @return the transaction service builder
+         */
         public static TransactionServiceBuilder aTransactionService() {
             return new TransactionServiceBuilder();
         }
 
+        /**
+         * Storage transaction service builder.
+         *
+         * @param storage the storage
+         * @return the transaction service builder
+         */
         public TransactionServiceBuilder storage(Storage storage) {
             transactionService.setStorage(storage);
             return this;
         }
 
-        public TransactionServiceBuilder validator(Validator validator) {
+        /**
+         * Validator transaction service builder.
+         *
+         * @param validator the validator
+         * @return the transaction service builder
+         */
+        public TransactionServiceBuilder validator(Validator<Transaction> validator) {
             transactionService.setValidator(validator);
             return this;
         }
 
+        /**
+         * Build transaction service.
+         *
+         * @return the transaction service
+         */
         public TransactionServiceImpl build() {
             return transactionService;
         }

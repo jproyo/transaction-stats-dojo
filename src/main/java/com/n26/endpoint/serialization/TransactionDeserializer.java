@@ -13,12 +13,24 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+/**
+ * Deserialization Transaction Class to map between requested string to
+ * typed structure {@link Transaction} class
+ */
 public class TransactionDeserializer extends StdDeserializer<Transaction> {
 
+    /**
+     * Instantiates a new Transaction deserializer.
+     *
+     * @param vc the vc
+     */
     public TransactionDeserializer(Class<?> vc) {
         super(vc);
     }
 
+    /**
+     * Instantiates a new Transaction deserializer.
+     */
     public TransactionDeserializer() {
         this(null);
     }

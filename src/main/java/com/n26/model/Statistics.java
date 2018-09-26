@@ -2,6 +2,9 @@ package com.n26.model;
 
 import java.util.Objects;
 
+/**
+ * Statistics Product Type
+ */
 public class Statistics {
 
     private String sum;
@@ -10,42 +13,92 @@ public class Statistics {
     private String min;
     private Long count;
 
+    /**
+     * Gets sum.
+     *
+     * @return the sum
+     */
     public String getSum() {
         return sum;
     }
 
+    /**
+     * Sets sum.
+     *
+     * @param sum the sum
+     */
     public void setSum(String sum) {
         this.sum = sum;
     }
 
+    /**
+     * Gets avg.
+     *
+     * @return the avg
+     */
     public String getAvg() {
         return avg;
     }
 
+    /**
+     * Sets avg.
+     *
+     * @param avg the avg
+     */
     public void setAvg(String avg) {
         this.avg = avg;
     }
 
+    /**
+     * Gets max.
+     *
+     * @return the max
+     */
     public String getMax() {
         return max;
     }
 
+    /**
+     * Sets max.
+     *
+     * @param max the max
+     */
     public void setMax(String max) {
         this.max = max;
     }
 
+    /**
+     * Gets min.
+     *
+     * @return the min
+     */
     public String getMin() {
         return min;
     }
 
+    /**
+     * Sets min.
+     *
+     * @param min the min
+     */
     public void setMin(String min) {
         this.min = min;
     }
 
+    /**
+     * Gets count.
+     *
+     * @return the count
+     */
     public Long getCount() {
         return count;
     }
 
+    /**
+     * Sets count.
+     *
+     * @param count the count
+     */
     public void setCount(Long count) {
         this.count = count;
     }
@@ -74,10 +127,20 @@ public class Statistics {
         return sb.toString();
     }
 
+    /**
+     * Create statistics builder.
+     *
+     * @return the statistics builder
+     */
     public static StatisticsBuilder create(){
         return new StatisticsBuilder();
     }
 
+    /**
+     * Empty statistics.
+     *
+     * @return the statistics
+     */
     public static Statistics empty() {
         return create()
                 .avg("0.00")
@@ -89,6 +152,9 @@ public class Statistics {
     }
 
 
+    /**
+     * The type Statistics builder.
+     */
     public static final class StatisticsBuilder {
         private Statistics statistics;
 
@@ -96,35 +162,75 @@ public class Statistics {
             statistics = new Statistics();
         }
 
+        /**
+         * A statistics statistics builder.
+         *
+         * @return the statistics builder
+         */
         public static StatisticsBuilder aStatistics() {
             return new StatisticsBuilder();
         }
 
+        /**
+         * Sum statistics builder.
+         *
+         * @param sum the sum
+         * @return the statistics builder
+         */
         public StatisticsBuilder sum(String sum) {
             statistics.setSum(sum);
             return this;
         }
 
+        /**
+         * Avg statistics builder.
+         *
+         * @param avg the avg
+         * @return the statistics builder
+         */
         public StatisticsBuilder avg(String avg) {
             statistics.setAvg(avg);
             return this;
         }
 
+        /**
+         * Max statistics builder.
+         *
+         * @param max the max
+         * @return the statistics builder
+         */
         public StatisticsBuilder max(String max) {
             statistics.setMax(max);
             return this;
         }
 
+        /**
+         * Min statistics builder.
+         *
+         * @param min the min
+         * @return the statistics builder
+         */
         public StatisticsBuilder min(String min) {
             statistics.setMin(min);
             return this;
         }
 
+        /**
+         * Count statistics builder.
+         *
+         * @param count the count
+         * @return the statistics builder
+         */
         public StatisticsBuilder count(Long count) {
             statistics.setCount(count);
             return this;
         }
 
+        /**
+         * Build statistics.
+         *
+         * @return the statistics
+         */
         public Statistics build() {
             return statistics;
         }
