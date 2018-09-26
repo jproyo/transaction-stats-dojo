@@ -1,4 +1,4 @@
-package com.n26.core.util;
+package com.n26.core.cat;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

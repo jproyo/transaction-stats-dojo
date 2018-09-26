@@ -1,6 +1,6 @@
 package com.n26.service.impl;
 
-import com.n26.core.util.Either;
+import com.n26.core.cat.Either;
 import com.n26.model.StoreResult;
 import com.n26.model.Transaction;
 import com.n26.persistence.Storage;
