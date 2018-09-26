@@ -1,7 +1,11 @@
 package com.n26.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.n26.endpoint.serialization.TransactionDeserializer;
+
 import java.math.BigDecimal;
 
+@JsonDeserialize(using = TransactionDeserializer.class)
 public class Transaction {
 
     private BigDecimal amount;

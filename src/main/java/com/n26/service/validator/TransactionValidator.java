@@ -13,8 +13,13 @@ public class TransactionValidator implements Validator{
     @Autowired
     private Config config;
 
-    public boolean valid(Transaction transaction){
-        return !noContent(transaction) && validTime(transaction);
+    public ValidatorResult validate(Transaction transaction){
+        if(noContent(transaction)) return ValidatorResult.INVALID;
+        Instant now = Instant.now(Clock.systemUTC());
+        Instant past = now.minus(config.getAmount(), config.unit());
+        if(isOld(transaction, past)) return ValidatorResult.OLD;
+        if(isFutre(transaction, now)) return ValidatorResult.FUTURE;
+        return ValidatorResult.VALID;
     }
 
     public boolean noContent(Transaction transaction) {
@@ -23,15 +28,12 @@ public class TransactionValidator implements Validator{
                 .orElse(true);
     }
 
-    public boolean validTime(Transaction transaction) {
-        Instant now = Instant.now(Clock.systemUTC());
-        Instant past = now.minus(config.getAmount(), config.unit());
-        System.out.println("Now: "+now.toEpochMilli()+" - Past: "+past.toEpochMilli()+" - Transaction: "+transaction.getTimestamp());
-        return Optional.ofNullable(transaction)
-                .map(t -> t.getTimestamp() >= past.toEpochMilli()
-                            && t.getTimestamp() <= now.toEpochMilli()
-                )
-                .orElse(true);
+    public boolean isOld(Transaction transaction, Instant past) {
+        return transaction.getTimestamp() < past.toEpochMilli();
+    }
+
+    public boolean isFutre(Transaction transaction, Instant now) {
+        return transaction.getTimestamp() > now.toEpochMilli();
     }
 
     public void setConfig(Config config) {

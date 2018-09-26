@@ -48,7 +48,7 @@ public class TransactionServiceTest {
                 .build();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
-        assertEquals(StoreResult.INVALID_TRANSACTION, result);
+        assertEquals(StoreResult.OLD, result);
     }
 
 
@@ -61,7 +61,7 @@ public class TransactionServiceTest {
                 .build();
         StoreResult result = target.store(transaction);
         assertNotNull(result);
-        assertEquals(StoreResult.INVALID_TRANSACTION, result);
+        assertEquals(StoreResult.FUTURE, result);
     }
 
     @Test

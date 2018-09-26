@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@JsonDeserialize()
 public class TransactionRequest {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)

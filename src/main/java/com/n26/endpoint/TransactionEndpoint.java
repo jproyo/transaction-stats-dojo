@@ -1,5 +1,6 @@
 package com.n26.endpoint;
 
+import com.n26.endpoint.serialization.TransactionParseException;
 import com.n26.model.Statistics;
 import com.n26.model.StoreResult;
 import com.n26.model.Transaction;
@@ -8,9 +9,8 @@ import com.n26.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.ZoneOffset;
 
 @RestController
 public class TransactionEndpoint {
@@ -23,20 +23,9 @@ public class TransactionEndpoint {
 
     @RequestMapping(value = "/transactions", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity save(@RequestBody TransactionRequest transactionRaw){
-        Transaction toStore = Transaction.create()
-                .amount(transactionRaw.getAmount())
-                .timestamp(transactionRaw.getTimestamp().toInstant(ZoneOffset.UTC).toEpochMilli()).build();
+    public ResponseEntity save(@RequestBody Transaction toStore){
         StoreResult store = transactionService.store(toStore);
-        switch (store){
-            case NO_CONTENT:
-                return new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
-            case INVALID_TRANSACTION:
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            case OK:
-                return new ResponseEntity(HttpStatus.CREATED);
-        }
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.resolve(store.getStatus()));
     }
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET)
@@ -50,5 +39,17 @@ public class TransactionEndpoint {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(){
         transactionService.deleteAll();
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ResponseEntity handleBadRequest(
+            HttpMessageNotReadableException ex) {
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TransactionParseException.class)
+    protected ResponseEntity handleErrorParsingJson(
+            TransactionParseException ex) {
+        return new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

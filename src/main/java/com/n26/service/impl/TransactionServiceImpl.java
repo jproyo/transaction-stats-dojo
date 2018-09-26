@@ -1,13 +1,15 @@
 package com.n26.service.impl;
 
+import com.n26.core.util.Either;
 import com.n26.model.StoreResult;
 import com.n26.model.Transaction;
 import com.n26.persistence.Storage;
 import com.n26.service.TransactionService;
-import com.n26.service.validator.TransactionValidator;
+import com.n26.service.validator.Validator;
+import com.n26.service.validator.ValidatorResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
+import java.util.function.Function;
 
 public class TransactionServiceImpl implements TransactionService {
 
@@ -15,16 +17,35 @@ public class TransactionServiceImpl implements TransactionService {
     private Storage storage;
 
     @Autowired
-    private TransactionValidator validator;
+    private Validator validator;
 
 
     @Override
     public StoreResult store(Transaction transaction) {
-        return Optional.ofNullable(transaction)
-                .filter(validator::valid)
-                .map(storage::put)
-                .map(t -> StoreResult.OK)
-                .orElse(resultFromTransaction(transaction));
+        ValidatorResult validate = validator.validate(transaction);
+        Either<ValidatorResult, Transaction> projection = null;
+        if(ValidatorResult.VALID.equals(validate)){
+            projection = Either.right(transaction);
+        }else{
+            projection = Either.left(validate);
+        }
+        return projection.map(mapErrors(), storeTransaction());
+    }
+
+    private Function<ValidatorResult, StoreResult> mapErrors(){
+        return validator -> {
+            switch (validator){
+                case INVALID: return StoreResult.NO_CONTENT;
+                default: return StoreResult.valueOf(validator.name());
+            }
+        };
+    }
+
+    private Function<Transaction, StoreResult> storeTransaction(){
+        return transaction -> {
+            storage.put(transaction);
+            return StoreResult.OK;
+        };
     }
 
     @Override
@@ -32,19 +53,11 @@ public class TransactionServiceImpl implements TransactionService {
         storage.deleteAll();
     }
 
-    public StoreResult resultFromTransaction(Transaction transaction){
-        if(validator.noContent(transaction)) {
-            return StoreResult.NO_CONTENT;
-        } else {
-            return StoreResult.INVALID_TRANSACTION;
-        }
-    }
-
     public void setStorage(Storage storage) {
         this.storage = storage;
     }
 
-    public void setValidator(TransactionValidator validator) {
+    public void setValidator(Validator validator) {
         this.validator = validator;
     }
 
@@ -68,7 +81,7 @@ public class TransactionServiceImpl implements TransactionService {
             return this;
         }
 
-        public TransactionServiceBuilder validator(TransactionValidator validator) {
+        public TransactionServiceBuilder validator(Validator validator) {
             transactionService.setValidator(validator);
             return this;
         }
