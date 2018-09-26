@@ -8,13 +8,16 @@ import java.util.stream.IntStream;
 
 public class LoadDataUtils {
 
+    public static void loadTransaction(TransactionService transactionService, double amount, long timestamp){
+        transactionService.store(Transaction.create()
+                .timestamp(timestamp)
+                .amount(new BigDecimal(amount))
+                .build());
+    }
+
     public static void loadTransactionsWithoutOldResults(TransactionService transactionService) {
-        IntStream.range(1, 11).forEach(i ->{
-            transactionService.store(Transaction.create()
-                    .timestamp(System.currentTimeMillis()-61000)
-                    .amount(new BigDecimal(21.32*i))
-                    .build());
-        });
+        IntStream.range(1, 11)
+                .forEach(i -> loadTransaction(transactionService, 21.32*i, System.currentTimeMillis()-61000));
 
         Arrays.asList(
                 Transaction.create()
@@ -49,12 +52,8 @@ public class LoadDataUtils {
     }
 
     public static void loadTransactions(TransactionService transactionService) {
-        IntStream.range(1, 201).forEach(i ->{
-            transactionService.store(Transaction.create()
-                    .timestamp(System.currentTimeMillis()-1000)
-                    .amount(new BigDecimal(23.98*i))
-                    .build());
-        });
+        IntStream.range(1, 201)
+                .forEach(i -> loadTransaction(transactionService, 23.98*i, System.currentTimeMillis()-1000));
     }
 
 

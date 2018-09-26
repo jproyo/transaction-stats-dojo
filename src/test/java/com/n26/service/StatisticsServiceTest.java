@@ -1,19 +1,14 @@
 package com.n26.service;
 
 import com.n26.config.Config;
+import com.n26.core.util.FormatterUtil;
 import com.n26.model.Statistics;
-import com.n26.model.StoreResult;
-import com.n26.model.Transaction;
 import com.n26.persistence.mem.MemoryStorage;
 import com.n26.service.impl.StatisticsServiceImpl;
 import com.n26.service.impl.TransactionServiceImpl;
 import com.n26.service.validator.TransactionValidator;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -67,5 +62,19 @@ public class StatisticsServiceTest {
         Statistics statistics = target.get();
         assertNotNull(statistics);
         assertEquals(Statistics.empty(), statistics);
+    }
+
+    @Test
+    public void testGetStatisticsIntegrationTestFailing(){
+        LoadDataUtils.loadTransaction(transactionService, 5,System.currentTimeMillis() - 1000);
+        LoadDataUtils.loadTransaction(transactionService, 3,System.currentTimeMillis() - 1000);
+        LoadDataUtils.loadTransaction(transactionService, 3,System.currentTimeMillis() - 1000);
+        Statistics statistics = target.get();
+        assertNotNull(statistics);
+        assertEquals("3.67", statistics.getAvg());
+        assertEquals("5.00", statistics.getMax());
+        assertEquals("3.00", statistics.getMin());
+        assertEquals("11.00", statistics.getSum());
+        assertEquals(new Long(3), statistics.getCount());
     }
 }

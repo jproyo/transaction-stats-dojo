@@ -51,7 +51,7 @@ public class StatisticsCollector implements Consumer<BigDecimal> {
     }
 
     public BigDecimal getAvg() {
-      return count < 2 ? sum : sum.divide(BigDecimal.valueOf(count), RoundingMode.HALF_DOWN);
+      return count < 2 ? sum : sum.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getMin() {
