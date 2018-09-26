@@ -37,7 +37,7 @@ public class TransactionDeserializer extends StdDeserializer<Transaction> {
 
     @Override
     public Transaction deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        JsonNode node =  jp.getCodec().readTree(jp);
+        JsonNode node = jp.getCodec().readTree(jp);
         Transaction.TransactionBuilder toStore = Transaction.create();
         try{
             JsonNode amount = node.get("amount");
