@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.n26.core.util.FormatterUtil;
 import com.n26.model.Transaction;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,17 +29,15 @@ public class TransactionDeserializer extends StdDeserializer<Transaction> {
         Transaction.TransactionBuilder toStore = Transaction.create();
         try{
             JsonNode amount = node.get("amount");
-            if(amount != null){
-                toStore = toStore.amount(new BigDecimal(amount.asText()));
-            }
+            if(amount == null) throw new HttpMessageNotReadableException("Bad format json message");
+            toStore = toStore.amount(new BigDecimal(amount.asText()));
         } catch (NumberFormatException e){
             throw new TransactionParseException("Error parsing amount");
         }
         try{
             JsonNode timestampNode = node.get("timestamp");
-            if(timestampNode != null){
-                toStore = toStore.timestamp(FormatterUtil.parse(timestampNode.asText()));
-            }
+            if(timestampNode == null) throw new HttpMessageNotReadableException("Bad format json message");
+            toStore = toStore.timestamp(FormatterUtil.parse(timestampNode.asText()));
         }catch (Exception e){
             throw new TransactionParseException("Error parsing date");
         }
